@@ -1,5 +1,10 @@
 package com.app.appsafe.services;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
 public class VideoController {
 
 	private int id;
@@ -11,6 +16,10 @@ public class VideoController {
 		this.id = id;
 		this.title = title;
 		this.url = url;
+	}
+	@RequestMapping
+	public String inicio() {
+		return "index";
 	}
 	
 	public void updateVideo(int id) {
