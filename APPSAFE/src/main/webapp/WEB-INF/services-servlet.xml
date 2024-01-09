@@ -19,7 +19,7 @@
     <!-- *****
 		   * REST API Service
 	 ****** -->
-	<bean id="userService" class="com.app.appsafe.services.UserService"></bean>
+	<bean id="userService" class="com.app.appsafe.services.VideoController"></bean>
 
 
 
