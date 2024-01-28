@@ -49,7 +49,7 @@ public class VideoController extends HttpServlet implements jakarta.servlet.Serv
 		protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
             // Lógica del método
-        	 jakarta.servlet.RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vista/index.jsp");
+        	 jakarta.servlet.RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vista/index2.jsp");
              dispatcher.forward(request, response);
         }
     }

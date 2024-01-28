@@ -30,6 +30,7 @@ body {
 	align-items: center width: 50%;
 	margin: 5% 10% 5% 10%;
 	text-align: center;
+	background-color: #1e1a1a;
 	
 }
 
@@ -37,12 +38,21 @@ body {
 nav {
 	height: 200px;
 	
+	
 }
 
 #menu {
 	/* background: #192666; */
 	padding: 10px 0 0 0;
 	background-color: #1e1a1a;
+	height: 100px;
+	
+	/* background: #192666; */
+	margin: 0 5px;
+	padding: 10px 0 0 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #menu ul {
@@ -51,32 +61,31 @@ nav {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+		margin: 0px;
+	position: absolute;
+	flex-flow: column;
+	box-shadow: inset 8px 2px 16px rgba(0, 0, 0, .2);
+	background: linear-gradient(0deg, #111111, #111111);
+	border-radius: 8px;
 
 }
-
-#menu ul li {
-	float: left;
-	margin: 0 0 0 0;
-	padding: 0;
-
-}
+/* #menu ul li{ */
+/* padding: 5px 15px 5px 15px; */
+/* } */
 
 
 #menu ul li a {
-	display: block;
-	position: relative;
-	padding: 5px 70px;
+	padding: 5px 15px 5px 15px;
 	border: 0;
-	background: linear-gradient(0deg, #000, #464646);
+	background: linear-gradient(0deg, #00000000, #00000000);
 	color: #fff;
 	font-weight: bold;
 	text-decoration: none;
-	box-shadow: inset 8px 2px 16px rgba(0, 0, 0, .2);
-	margin-right: 5px;
-
-
-
-
+	margin-right: 0px;
+	text-align: center;
+	width: 100px;/*auto*/
+	white-space: nowrap;
+	
 }
 
 #menu ul li a:hover {
@@ -241,7 +250,6 @@ footer {
 
 /*----------------------------- MEDIA SCREEN ---------------------------*/
 
-@media only screen and (max-width: 800px) {
 
 	.dropbtn {
 		display: flex;
@@ -249,19 +257,22 @@ footer {
 		color: #fff;
 		justify-content: center;
 		align-items: center;
-		width: 500px;
 		height: 40px;
 		font-weight: bold;
 		text-decoration: none;
 		box-shadow: inset 8px 2px 16px rgba(0, 0, 0, .2);
 		border: none;
 		border-radius: 8px;
+		padding: 0 20px 0 20px;
+		margin: 0 20px 0 20px;
+		
 
 	}
 
 	.dropdown {
 		position: relative;
 		display: inline-block;
+		
 
 
 	}
@@ -273,6 +284,7 @@ footer {
 	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	z-index: 1;
 	animation: rotateX 200ms  linear;
+	left: 15%;
 }
 
 @keyframes rotateX {
@@ -294,7 +306,6 @@ footer {
 
 .dropdown-content a {
 	padding: 20px;
-	display: block;
 }
 
 .dropdown:hover .dropdown-content {
@@ -302,71 +313,107 @@ footer {
 
 }
 
-
-
-#menu {
-	/* background: #192666; */
-	padding: 10px 0 0 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-
-}
-
-#menu ul {
-	margin: 0px;
-	position: absolute;
-	flex-flow: column;
-	box-shadow: inset 8px 2px 16px rgba(0, 0, 0, .2);
-	background: linear-gradient(0deg, #111111, #111111);
-	border-radius: 8px;
-	width: 500px;
-
-}
-
-#menu ul li {
-	animation-name: display;
-	animation-duration: 2s;
-	background-color: transparent;
-
-}
-
-#menu ul li a {
-	padding: 5px 15px;
-	border: 0;
-	background: linear-gradient(0deg, #00000000, #00000000);
-	color: #fff;
-	font-weight: bold;
-	text-decoration: none;
-	margin-right: 0px;
-	width: 500px;
-	text-align: center;
-
-}
-
 .clear {
 	clear: both;
 }
+
+@media only screen and (max-width: 800px) {
+
+
+
+}
+
 </style>
 </head>
+
+<body>
+
+
 <body>
 	<!-- Aquí empieza el encabezado principal que se mantendrá en todas las páginas del sitio web -->
 	<div id="contenedor">
 
 		<nav id="menu">
 
+			 <div class="dropdown">
+				<button class="dropbtn">MENU</button>
+				<div class="dropdown-content">
+					<ul>
+						<li><a href="#" class="nav-item">Importar video</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			 <div class="dropdown">
+				<button class="dropbtn">RESOLUCION</button>
+				<div class="dropdown-content">
+					<ul>
+						<li><a href="#" class="nav-item">Original</a></li>
+						<li><a href="#" class="nav-item">4320p</a></li>
+						<li><a href="#" class="nav-item">2160p</a></li>
+						<li><a href="#" class="nav-item">1440p</a></li>
+						<li><a href="#" class="nav-item">720p</a></li>
+						<li><a href="#" class="nav-item">480p</a></li>
+						<li><a href="#" class="nav-item">360p</a></li>
+						<li><a href="#" class="nav-item">240p</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			 <div class="dropdown">
+				<button class="dropbtn">FORMATO</button>
+				<div class="dropdown-content">
+					<ul>
+						<li><a href="#" class="nav-item">MP4</a></li>
+						<li><a href="#" class="nav-item">WMV</a></li>
+						<li><a href="#" class="nav-item">HEVC</a></li>
+						<li><a href="#" class="nav-item">AVI</a></li>
+						<li><a href="#" class="nav-item">MOV</a></li>
+						<li><a href="#" class="nav-item">F4V</a></li>
+						<li><a href="#" class="nav-item">MKV</a></li>
+						<li><a href="#" class="nav-item">TS</a></li>
+						<li><a href="#" class="nav-item">3GP</a></li>
+						<li><a href="#" class="nav-item">MPRG-2</a></li>
+						<li><a href="#" class="nav-item">WEBM</a></li>
+						<li><a href="#" class="nav-item">GIF</a></li>
+						<li><a href="#" class="nav-item">MP3</a></li>
+					</ul>
+				</div>
+			</div>
+
             <div class="dropdown">
-                <button class="dropbtn">MENU</button>
+                <button class="dropbtn">Lista de reproduccion</button>
                 <div class="dropdown-content">
                     <ul>
-                        <li><a href="#" class="nav-item">Inicio</a></li>
-                        <li><a href="#" class="nav-item">Cartas</a></li>
-                        <li class="seleccionado nav-item"><a href="#">Opiniones</a></li>
+                    	<li><a href="#" class="nav-item">Crear lista de reproduccion</a></li>
+                        <li><a href="#" class="nav-item">Lista de reproduccion</a></li>
                     </ul>
                 </div>
+				
             </div>
-
+            
+            <div class="dropdown">
+				<button class="dropbtn">CALIDAD</button>
+				<div class="dropdown-content">
+					<ul>
+						<li><a href="#" class="nav-item">ALTA</a></li>
+						<li><a href="#" class="nav-item">MEDIA</a></li>
+						<li><a href="#" class="nav-item">BAJA</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			 <div class="dropdown">
+				<button class="dropbtn">IDIOMA</button>
+				<div class="dropdown-content">
+					<ul>
+						<li><a href="#" class="nav-item">ES / es</a></li>
+						<li class="seleccionado nav-item"><a href="#">ENG / eng</a></li>
+						
+					</ul>
+				</div>
+			</div>
+			
             <div class="clear"></div>
         </nav>
 
@@ -413,4 +460,6 @@ footer {
 		</footer>
 	</div>
 </body>
+
+
 </html>
