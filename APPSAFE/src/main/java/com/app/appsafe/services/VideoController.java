@@ -51,11 +51,27 @@ public class VideoController extends HttpServlet implements jakarta.servlet.Serv
             // Lógica del método
         	 jakarta.servlet.RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vista/index2.jsp");
              dispatcher.forward(request, response);
+             
+             //Utilizar libreria Gson
+//             // Obtener las listas de reproducción de la base de datos o cualquier otra fuente de datos
+//             List<Playlist> playlists = playlistService.getAllPlaylists();
+//             
+//             // Convertir las listas de reproducción a JSON utilizando Gson
+//             Gson gson = new Gson();
+//             String json = gson.toJson(playlists);
+//             
+//             // Configurar la respuesta HTTP para devolver el JSON
+//             response.setContentType("application/json");
+//             response.setCharacterEncoding("UTF-8");
+//             response.getWriter().write(json);
         }
+		
+		
     }
 
 	
 	public void updateVideo(int id) {
+		
 		
 	}
 	public void saveVideo(int id) {
@@ -89,6 +105,8 @@ public class VideoController extends HttpServlet implements jakarta.servlet.Serv
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	
 
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws jakarta.servlet.ServletException {
