@@ -5,17 +5,16 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LanguageManager {
-
-	   private static ResourceBundle messages;
+	 private static ResourceBundle messages;
 
 	    static {
-	        // Por defecto, carga el archivo de propiedades en castellano
-	        setLanguage("es");
+	        // Por defecto, carga el archivo de propiedades en inglés
+	        setLanguage("en");
 	    }
 
 	    public static void setLanguage(String languageCode) {
-	    	  Locale locale = Locale.forLanguageTag(languageCode);
-	        messages = ResourceBundle.getBundle("messages", locale);
+	    	 Locale locale = Locale.forLanguageTag(languageCode);
+	    	    messages = ResourceBundle.getBundle("messages", locale);
 	    }
 
 	    public static String getMessage(String key) {

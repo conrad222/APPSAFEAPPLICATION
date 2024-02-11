@@ -1,13 +1,18 @@
 package com.app.appsafe.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.ServletContext;
@@ -17,8 +22,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+
+@RestController
 public class VideoController extends HttpServlet implements jakarta.servlet.ServletContainerInitializer {
 
 	/**
@@ -104,6 +112,21 @@ public class VideoController extends HttpServlet implements jakarta.servlet.Serv
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:8080")
+	@GetMapping("/creardirectorio")
+	public String creardirectorioGet(@RequestParam String nombreDirectorio) {
+	    String rutaVideos = "Vídeos" + File.separator + nombreDirectorio;
+	    File directorio = new File(rutaVideos);
+
+	    if (directorio.mkdir()) {
+	        System.out.println("Directorio creado: " + rutaVideos);
+	        return "Directorio creado correctamente: " + rutaVideos;
+	    } else {
+	        System.out.println("No se pudo crear el directorio: " + rutaVideos);
+	        return "Error al crear el directorio: " + rutaVideos;
+	    }
 	}
 	
 	

@@ -81,12 +81,18 @@ body {
 	
 }
 
-  .dropdown-item i {
-            display: none; /* Oculta el icono por defecto */
-        }
+.dropdown-item i {
+	display: none; /* Oculta el icono por defecto */
+}
 
 .dropdown-divider {
 	
+}
+
+#crearlistalabel {
+	width: 100%;
+	border: none;
+	outline: none;
 }
 
 main {
@@ -102,6 +108,7 @@ aside {
 	width: 20% !important;
 }
 
+
 .columna {
 	display: flex;
 	justify-content: center;
@@ -115,6 +122,23 @@ aside {
 	background-color: #282626;
 	overflow-x: auto;
 	white-space: nowrap;
+}
+
+#carousel {
+    position: relative;
+}
+
+.lista {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%; /* ajusta según sea necesario */
+    height: 7%; /* ajusta según sea necesario */
+    background-color: #efeef3;
+    text-align:center;
+
 }
 
 video {
@@ -334,38 +358,121 @@ $(document).ready(function() {
     });
         
     </script>
-    
-	<script>
-	// IDIOMAS CHECKED
-		   var LanguageManager = {
-        	setLanguage: function (languageCode) {
-            console.log('Changing language to:', languageCode);
-        }
-    };
-         function seleccionarIdioma(elemento, idioma) {
-        // Elimina la clase 'checked' de todos los elementos
-        $('.dropdown-menu .dropdown-item').removeClass('checked');
+<script>
 
-        // Agrega la clase 'checked' al elemento clicado
-        $(elemento).addClass('checked');
+	var languageMessages= {
+			  'es': {
+	                'IDIOMA': 'IDIOMA',
+	                'MENU': 'MENU',
+	                'RESOLUCION': 'RESOLUCION',
+	                'Original': 'Original',
+	                'FORMATO': 'FORMATO',
+	                'CALIDAD': 'CALIDAD',
+	                'ALTA': 'ALTA',
+	                'MEDIA': 'MEDIA',
+	                'BAJA': 'BAJA',
+	                'LISTAS': 'LISTAS',
+	                'CREAR LISTA DE REPRODUCCION': 'CREAR LISTA DE REPRODUCCION'
+	            },
+	            'en': {
+	                'IDIOMA': 'LANGUAGE',
+	                'MENU': 'MENU',
+	                'RESOLUCION': 'RESOLUTION',
+	                'Original': 'Original',
+	                'FORMATO': 'FORMAT',
+	                'CALIDAD': 'QUALITY',
+	                'ALTA': 'HIGH',
+	                'MEDIA': 'MEDIUM',
+	                'BAJA': 'LOW',
+	                'LISTAS': 'LISTS',
+	                'CREAR LISTA DE REPRODUCCION': 'CREATE PLAYLIST'
+	            }
+	        };
+	    
+		// IDIOMAS CHECKED Y SELECCION IDIOMA
+	var LanguageManager = {
+	    messages: {},
+	    currentLanguage: '',
 
-        // Oculta todos los iconos de checkmark solo en el desplegable de FORMATO
-        $('.dropdown-menu .dropdown-item i').hide();
+	    setLanguage: function (languageCode) {
+// 	        console.log('Changing language to:', languageCode);
+	        LanguageManager.currentLanguage = languageCode;
+	        LanguageManager.messages = languageMessages[languageCode] || {};
+// 	        console.log('Complete languageMessages:', languageMessages);
+// 	        console.log('languageMessages for', languageCode + ':', languageMessages[languageCode]);
+	    },
 
-        // Muestra el icono de checkmark solo en el elemento clicado
-        $(elemento).find('i').show();
+	    getMessage: function (key) {
+	        return LanguageManager.messages[key] || key;
+	    }
+	};
 
-        // Cambia el idioma en Java
-        LanguageManager.setLanguage(idioma[1]);
+	// Set a default language
+	LanguageManager.setLanguage('en');
 
-        // Obtén el mensaje según el idioma
-        var greeting = '${LanguageManager.getMessage("IDIOMA")}';
+	         function seleccionarIdioma(elemento, idioma) {
+	        // Elimina la clase 'checked' de todos los elementos
+	        $('.dropdown-menu .dropdown-item').removeClass('checked');
 
-        // Puedes realizar otras acciones aquí según el formato seleccionado
-        console.log('Mensaje de saludo:', greeting);
+	        // Agrega la clase 'checked' al elemento clicado
+	        $(elemento).addClass('checked');
+
+	        // Oculta todos los iconos de checkmark solo en el desplegable de FORMATO
+	        $('.dropdown-menu .dropdown-item i').hide();
+
+	        // Muestra el icono de checkmark solo en el elemento clicado
+	        $(elemento).find('i').show();
+
+	        // Cambia el idioma en Java
+	        LanguageManager.setLanguage(idioma[1]);
+
+	     // Log language and messages for debugging
+// 	        console.log('Current Language:', LanguageManager.currentLanguage);
+// 	        console.log('Language Messages:', LanguageManager.messages);
+
+	        if (idioma === 'es') {
+
+	        	document.getElementById('idiomalabel').textContent = LanguageManager.getMessage('IDIOMA');
+	            document.getElementById('menulabel').textContent = LanguageManager.getMessage('MENU');
+	            document.getElementById('resolucionlabel').textContent = LanguageManager.getMessage('RESOLUCION');
+	            document.getElementById('formatolabel').textContent = LanguageManager.getMessage('FORMATO');
+	            document.getElementById('calidadlabel').textContent = LanguageManager.getMessage('CALIDAD');
+	            document.getElementById('listaslabel').textContent = LanguageManager.getMessage('LISTAS');
+
+	            document.getElementById('videolabel').textContent = LanguageManager.getMessage('Importar video');
+
+	            document.getElementById('altalabel').textContent = LanguageManager.getMessage('ALTA');
+	            document.getElementById('medialabel').textContent = LanguageManager.getMessage('MEDIA');
+	            document.getElementById('bajalabel').textContent = LanguageManager.getMessage('BAJA');
+
+	            var inputElement = document.getElementById("crearlistalabel");
+
+	            // Establece el nuevo valor del placeholder según el idioma seleccionado
+	            inputElement.placeholder = LanguageManager.getMessage('CREAR LISTA');
+	            
+	        } else if (idioma === 'en') {
+	            document.getElementById('idiomalabel').textContent = LanguageManager.getMessage('LANGUAGE');
+	            document.getElementById('menulabel').textContent = LanguageManager.getMessage('MENU');
+	            document.getElementById('resolucionlabel').textContent = LanguageManager.getMessage('RESOLUTION');
+	            document.getElementById('formatolabel').textContent = LanguageManager.getMessage('FORMAT');
+	            document.getElementById('calidadlabel').textContent = LanguageManager.getMessage('QUALITY');
+	            document.getElementById('listaslabel').textContent = LanguageManager.getMessage('LISTS');
+
+	            document.getElementById('videolabel').textContent = LanguageManager.getMessage('Import video');
+	            
+	            document.getElementById('altalabel').textContent = LanguageManager.getMessage('HIGH');
+	            document.getElementById('medialabel').textContent = LanguageManager.getMessage('MEDIUM');
+	            document.getElementById('bajalabel').textContent = LanguageManager.getMessage('LOW');
+
+	            var inputElement = document.getElementById("crearlistalabel");
+
+	            // Establece el nuevo valor del placeholder según el idioma seleccionado
+	            inputElement.placeholder = LanguageManager.getMessage('CREATE PLAYLIST');
+	        }
+
     }
     </script>
-    <script>
+<script>
 	// RESOLUCION CHECKED
         function seleccionarResolucion(elemento, resolucion) {
         	   // Elimina la clase 'checked' de todos los elementos
@@ -384,7 +491,7 @@ $(document).ready(function() {
               console.log('Resolucion seleccionada:', resolucion);
         }
     </script>
-    <script>
+<script>
 	// FORMATO CHECKED
         function seleccionarFormato(elemento, formato) {
         	  // Elimina la clase 'checked' solo del desplegable de FORMATO
@@ -403,7 +510,7 @@ $(document).ready(function() {
             console.log('Formato seleccionado:', formato);
         }
     </script>
-    <script>
+<script>
 	// CALIDAD CHECKED
         function seleccionarCalidad(elemento, calidad) {
         	   // Elimina la clase 'checked' solo del desplegable de CALIDAD
@@ -422,6 +529,169 @@ $(document).ready(function() {
             console.log('Calidad seleccionada:', calidad);
         }
     </script>
+<script>
+function crearlista(event) {
+    if (event.key === "Enter") {
+        var nuevoNombreDirectorio = document.getElementById("crearlistalabel").value.trim();
+
+        if (nuevoNombreDirectorio !== "") {
+            // Crea un nuevo elemento <a> para mostrar el nombre del directorio en el botón
+            var nuevoEnlace = document.createElement("a");
+            nuevoEnlace.href = "#";
+            nuevoEnlace.textContent = nuevoNombreDirectorio;
+            nuevoEnlace.className = "dropdown-item";
+
+            // Agrega el nuevo enlace al contenedor del dropdown-menu
+            document.querySelector('.dropdown-menu6').insertBefore(nuevoEnlace, document.getElementById('raya'));
+
+            // Agrega el nuevo directorio a la lista en localStorage
+            agregarDirectorioLocalStorage(nuevoNombreDirectorio);
+
+            // Agrega el nuevo directorio al carrusel
+            agregarListaAlCarousel(nuevoNombreDirectorio);
+
+            // Limpia el valor del input después de crear el directorio
+            document.getElementById("crearlistalabel").value = "";
+        }
+    }
+}
+
+// Función para agregar una lista al carrusel
+function agregarListaAlCarousel(nombreDirectorio) {
+    // Crea un nuevo elemento <a> con el nombre de la lista
+    var nuevoEnlace = document.createElement("a");
+    nuevoEnlace.textContent = nombreDirectorio;
+
+    // Agrega la nueva lista al contenedor del carrusel
+    document.querySelector('.lista').appendChild(nuevoEnlace);
+}
+
+function agregarDirectorioLocalStorage(nombreDirectorio) {
+    // Obtén la lista actual de directorios desde localStorage o crea una nueva lista vacía
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
+    // Agrega el nuevo directorio a la lista
+    listaDirectorios.push(nombreDirectorio);
+
+    // Guarda la lista actualizada en localStorage
+    localStorage.setItem('listaDirectorios', JSON.stringify(listaDirectorios));
+}
+
+// Recupera la lista de directorios al cargar la página y muestra los enlaces
+window.onload = function () {
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
+    // Crea enlaces para cada directorio en la lista y agrégales al contenedor
+    var contenedor = document.querySelector('.dropdown-menu6');
+    listaDirectorios.forEach(function (nombreDirectorio) {
+        var nuevoEnlace = document.createElement("a");
+        nuevoEnlace.href = "#";
+        nuevoEnlace.textContent = nombreDirectorio;
+        nuevoEnlace.className = "dropdown-item";
+        contenedor.insertBefore(nuevoEnlace, document.getElementById('raya'));
+    });
+};
+
+//Función para manejar el doble clic en un elemento de la lista
+function handleDobleClic(nombreDirectorio) {
+    var confirmacion = confirm("¿Quieres borrar esta lista de reproducción? Desaparecerán todos los videos de esta lista.");
+
+    if (confirmacion) {
+        // Borrar la lista del localStorage y de la interfaz
+        borrarDirectorioLocalStorage(nombreDirectorio);
+
+        // Actualizar la interfaz (puedes agregar tu lógica específica aquí)
+        actualizarInterfaz();
+    }
+}
+
+//Función para agregar un directorio al localStorage y a la interfaz
+function agregarDirectorioLocalStorage(nombreDirectorio) {
+    // Obtén la lista actual de directorios desde localStorage o crea una nueva lista vacía
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
+    // Agrega el nuevo directorio a la lista
+    listaDirectorios.push(nombreDirectorio);
+
+    // Guarda la lista actualizada en localStorage
+    localStorage.setItem('listaDirectorios', JSON.stringify(listaDirectorios));
+}
+
+//Función para borrar un directorio del localStorage
+function borrarDirectorioLocalStorage(nombreDirectorio) {
+    // Obtén la lista actual de directorios desde localStorage
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
+    // Encuentra y borra el directorio de la lista
+    var indice = listaDirectorios.indexOf(nombreDirectorio);
+    if (indice !== -1) {
+        listaDirectorios.splice(indice, 1);
+
+        // Actualiza la lista en localStorage
+        localStorage.setItem('listaDirectorios', JSON.stringify(listaDirectorios));
+
+
+        // Elimina el elemento del DOM
+        var enlaceAEliminar = document.querySelector('.dropdown-menu6 a[href="#"][textContent="' + nombreDirectorio + '"]');
+        if (enlaceAEliminar) {
+            enlaceAEliminar.remove();
+        }
+
+        // Actualiza la interfaz
+        actualizarInterfaz();
+    }
+}
+
+function cambiarALista(nombreDirectorio) {
+    // Actualiza el nombre en el div.lista
+    document.querySelector('.lista').textContent = nombreDirectorio;
+
+    // Puedes agregar lógica adicional aquí, como cargar videos específicos para esa lista, etc.
+}
+
+
+//Función para actualizar la interfaz (puedes personalizar esto según tu implementación)
+function actualizarInterfaz() {
+    var contenedor = document.querySelector('.dropdown-menu6');
+
+    // Recupera la lista de directorios del localStorage
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
+    // Limpia el contenedor antes de volver a crear los elementos
+    contenedor.innerHTML = "";
+
+    // Crea enlaces para cada directorio en la lista y agrégales al contenedor
+    listaDirectorios.forEach(function (nombreDirectorio) {
+        var nuevoEnlace = document.createElement("a");
+        nuevoEnlace.href = "#";
+        nuevoEnlace.textContent = nombreDirectorio;
+        nuevoEnlace.className = "dropdown-item";
+
+        // Agrega el evento de doble clic al nuevo enlace
+        nuevoEnlace.addEventListener('dblclick', function () {
+            handleDobleClic(nombreDirectorio);
+        });
+
+        // Agrega el evento de clic para cambiar a la lista
+        nuevoEnlace.addEventListener('click', function () {
+            cambiarALista(nombreDirectorio);
+        });
+
+        contenedor.appendChild(nuevoEnlace);
+    });
+}
+
+//Recupera la lista de directorios al cargar la página y muestra los enlaces
+window.onload = function () {
+    // Actualiza la interfaz al cargar la página
+    actualizarInterfaz();
+};
+
+
+// Llama a la función pasando el nombre del directorio
+// creardirectorio('nombre_del_directorio');
+
+</script>
 </head>
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark">
@@ -442,46 +712,47 @@ $(document).ready(function() {
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">IDIOMA</a>
+						aria-expanded="false"> <span id="idiomalabel">IDIOMA</span>
+					</a>
 						<div class="dropdown-menu dropdown-menu1"
 							aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#"
-								onclick="seleccionarIdioma(this, 'ES/es')"> ES/es <i
-								class="fas fa-check"></i> <!-- Icono de checkmark -->
-							</a>
+								onclick="seleccionarIdioma(this, 'es')"> ES/es <i
+								class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
-								onclick="seleccionarIdioma(this, 'ING/ing')"> ING/ing <i
-								class="fas fa-check"></i> <!-- Icono de checkmark -->
-							</a>
+								onclick="seleccionarIdioma(this, 'en')"> ING/ing <i
+								class="fas fa-check"></i></a>
 						</div></li>
+
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown2"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">MENU</a>
+						aria-expanded="false"><span id="menulabel">MENU</span></a>
 						<div class="dropdown-menu dropdown-menu2"
 							aria-labelledby="navbarDropdown2">
 							<input type="file" id="inputVideo" accept="video/*"
 								style="display: none;"> <a class="dropdown-item"
 								href="#"
-								onclick="document.getElementById('inputVideo').click();">Importar
-								video</a>
+								onclick="document.getElementById('inputVideo').click();"> <span
+								id="videolabel">Importar video</span></a>
 						</div></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown3"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">RESOLUCION</a>
+						aria-expanded="false"><span id="resolucionlabel">RESOLUCION</span></a>
 						<div class="dropdown-menu dropdown-menu3"
 							aria-labelledby="navbarDropdown3">
-							<a class="dropdown-item" href="#" 
-								onclick="seleccionarResolucion(this, 'Original')"> Original <i
-								class="fas fa-check"></i></a>
+							<a class="dropdown-item" href="#"
+								onclick="seleccionarResolucion(this, 'Original')"> Original
+								<i class="fas fa-check"></i>
+							</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
 								onclick="seleccionarResolucion(this, '4320p')"> 4320p <i
 								class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#" 
+							<a class="dropdown-item" href="#"
 								onclick="seleccionarResolucion(this, '2160p')"> 2160p <i
 								class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
@@ -508,7 +779,7 @@ $(document).ready(function() {
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown4"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">FORMATO</a>
+						aria-expanded="false"><span id="formatolabel">FORMATO</span></a>
 						<div class="dropdown-menu dropdown-menu4"
 							aria-labelledby="navbarDropdown4">
 							<a class="dropdown-item" href="#"
@@ -566,30 +837,31 @@ $(document).ready(function() {
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown5"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">CALIDAD</a>
+						aria-expanded="false"><span id="calidadlabel">CALIDAD</span></a>
 						<div class="dropdown-menu dropdown-menu5"
 							aria-labelledby="navbarDropdown5">
 							<a class="dropdown-item" href="#"
-								onclick="seleccionarCalidad(this, 'ALTA')"> ALTA <i
-								class="fas fa-check"></i></a>
+								onclick="seleccionarCalidad(this, 'ALTA')"><span
+								id="altalabel">ALTA</span><i class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
-								onclick="seleccionarCalidad(this, 'MEDIA')"> MEDIA <i
-								class="fas fa-check"></i></a>
+								onclick="seleccionarCalidad(this, 'MEDIA')"><span
+								id="medialabel">MEDIA</span><i class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
-								onclick="seleccionarCalidad(this, 'BAJA')"> BAJA<i
-								class="fas fa-check"></i></a>
+								onclick="seleccionarCalidad(this, 'BAJA')"><span
+								id="bajalabel">BAJA</span><i class="fas fa-check"></i></a>
 						</div></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown6"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">LISTAS </a>
+						aria-expanded="false"> <span id="listaslabel">LISTAS</span>
+					</a>
 						<div class="dropdown-menu dropdown-menu6"
 							aria-labelledby="navbarDropdown6">
-							<a class="dropdown-item" href="#">CREAR LISTA DE REPRODUCCION</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#">"Lista de reproduccion"</a>
+							<input type="text" id="crearlistalabel" placeholder="CREAR LISTA"
+								onkeydown="crearlista(event)">
+							<div class="dropdown-divider" id="raya"></div>
 						</div></li>
 				</ul>
 			</div>
@@ -601,13 +873,8 @@ $(document).ready(function() {
 		<!-- el contenido aparte también se puede anidar dentro del contenido principal -->
 		<aside>
 			<div id="carousel" class="columna">
-				<video controls>
-					<source src="video1.mp4" type="video/mp4">
-				</video>
-				<video controls>
-					<source src="video1.mp4" type="video/mp4">
-				</video>
-
+				<div class=lista>
+				</div>
 			</div>
 		</aside>
 		<!-- Contiene un artículo -->
