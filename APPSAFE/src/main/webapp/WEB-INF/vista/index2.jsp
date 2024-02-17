@@ -299,63 +299,126 @@ $('.dropdown-item').click(function() {
 
 
 <script>
-$(document).ready(function() {
-	  // Obtener las listas de reproducción del servidor
-	  $.ajax({
-	    url: '/playlist', // URL del servlet o controlador que devuelve las listas de reproducción
-	    method: 'GET',
-	    success: function(response) {
-	      // Procesar la respuesta y mostrar las listas de reproducción en el carrusel
-	      for (var i = 0; i < response.length; i++) {
-	        var playlist = response[i];
-	        $('#carousel').append('<div>' + playlist.title + '</div>');
-	      }
+// $(document).ready(function() {
+// 	  // Obtener las listas de reproducción del servidor
+// 	  $.ajax({
+// 	    url: '/playlist', // URL del servlet o controlador que devuelve las listas de reproducción
+// 	    method: 'GET',
+// 	    success: function(response) {
+// 	      // Procesar la respuesta y mostrar las listas de reproducción en el carrusel
+// 	      for (var i = 0; i < response.length; i++) {
+// 	        var playlist = response[i];
+// 	        $('#carousel').append('<div>' + playlist.title + '</div>');
+// 	      }
 	      
-	      // Inicializar el carrusel utilizando la biblioteca jQuery UI
-	      $('#carousel').carousel();
-	    },
-	    error: function(xhr, status, error) {
-	      // Manejar el error de la petición AJAX
-	      console.log(error);
-	    }
-	  });
-	});
+// 	      // Inicializar el carrusel utilizando la biblioteca jQuery UI
+// 	      $('#carousel').carousel();
+// 	    },
+// 	    error: function(xhr, status, error) {
+// 	      // Manejar el error de la petición AJAX
+// 	      console.log(error);
+// 	    }
+// 	  });
+// 	});
 </script>
 
 <script>
-    
-    document.getElementById('inputVideo').addEventListener('change', function() {
-        // Obtiene el contenedor del carrusel
-        var carruselContainer = document.getElementById('carousel');
-        
-        // Itera sobre los archivos seleccionados
-        Array.from(this.files).forEach(function(videoFile) {
-            // Crea un nuevo elemento de video
-            var nuevoVideo = document.createElement('video');
-            nuevoVideo.controls = true;
-            
-            // Crea una fuente para el archivo de video
-            var fuenteVideo = document.createElement('source');
-            fuenteVideo.src = URL.createObjectURL(videoFile);
-            fuenteVideo.type = 'video/mp4';
-            
-            // Agrega la fuente al video
-            nuevoVideo.appendChild(fuenteVideo);
-            
-            // Agrega el video al contenedor del carrusel
-            carruselContainer.appendChild(nuevoVideo);
-        });
-        
-        // Vuelve a inicializar el carrusel después de agregar los nuevos videos
-        $('.carrusel').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            arrows: true,
-            dots: true
-        });
-    });
+
+function importarVideo(event) {
+	   document.getElementById('inputVideo').click();
+
+		// Obtener el elemento de entrada de archivos
+	   var inputVideo = document.getElementById('inputVideo');
+	
+	    // Obtiene el nombre de la lista actual
+	    var nombreListaActual = document.querySelector('.lista').textContent;
+
+	 // Verificar si se seleccionó un archivo
+		   if (inputVideo.files.length > 0) {
+		     // Obtener el nombre y la extensión del archivo
+		     var fileName = inputVideo.files[0].name;
+		     var fileExtension = fileName.split('.').pop();
+		     
+		     // Mostrar el nombre y la extensión del archivo
+		     console.log('Archivo seleccionado: ' + fileName + ' (Extensión: ' + fileExtension);
+		   } else {
+		     // No se seleccionó ningún archivo
+		     console.log('Ningún archivo seleccionado');
+		   }
+
+	    // Array para almacenar los videos de la lista actual
+	    var listaDeVideos = JSON.parse(localStorage.getItem('listaDeVideos')) || [];
+
+	    // Función para verificar si el archivo de video es de un tipo permitido
+	    function esTipoDeVideoPermitido(nombreArchivo) {
+	        // Lista de extensiones permitidas
+	        const extensionesPermitidas = ['mp3', 'mp4', 'wmv', 'hevc', 'avi', 'mov', 'f4v', 'mkv', 'ts', '3gp', 'mprg-2', 'webm', 'gif'];
+
+	        // Obtén la extensión del archivo si el nombreArchivo está definido
+	        const extension = nombreArchivo ? nombreArchivo.split('.').pop().toLowerCase() : '';
+
+	        // Verifica si la extensión está en la lista de extensiones permitidas
+	        return extensionesPermitidas.includes(extension);
+	    }
+
+	        // Verifica si el archivo es de un tipo permitido
+	        if (esTipoDeVideoPermitido(fileExtension)) {
+
+			        	// Crear un objeto Blob para el archivo seleccionado
+			            var fileBlob = new Blob([inputVideo.files[0]], { type: inputVideo.files[0].type });
+	            
+		                // Crea un nuevo elemento de video
+		                var nuevoVideo = document.createElement('video');
+		                nuevoVideo.controls = true;
+
+		             	// Crea una fuente para el archivo de video
+		                var fuenteVideo = document.createElement('source');
+		                fuenteVideo.src = URL.createObjectURL(fileBlob);
+		                fuenteVideo.type = inputVideo.files[0].type;
+
+		                // Agrega la fuente al video
+		                nuevoVideo.appendChild(fuenteVideo);
+
+		                // Agrega el video al contenedor del carrusel específico
+		                var idListaActual = nombreListaActual.replace(/\s+/g, '-').toLowerCase();
+		                var listaActual = document.querySelector('.columna'); // Utiliza querySelector para obtener el primer elemento con la clase 'lista'
+		                listaActual.appendChild(nuevoVideo);
+
+		                
+	            // Agrega el nuevo directorio a la lista
+	            listaDeVideos.push({
+	                nombreLista: nombreListaActual,
+	                nombreVideo:  fileName,
+	                Extension: fileExtension
+	                // Agrega más información si es necesario
+	            });
+
+	            // Guarda la lista actualizada en localStorage
+	            localStorage.setItem('listaDeVideos', JSON.stringify(listaDeVideos));
+
+	            console.log('Video agregado con éxito.');
+	        } else {
+	            console.log('El formato del video no es válido. Selecciona un archivo de video permitido.');
+	        }
+
+	     // Vuelve a inicializar el carrusel después de agregar los nuevos videos
+		    $('.carrusel').slick({
+		        slidesToShow: 1,
+		        slidesToScroll: 1,
+		        autoplay: true,
+		        autoplaySpeed: 2000,
+		        arrows: true,
+		        dots: true
+		    });
+	    
+	}
+
+
+// function asociarVideoConLista(videoFile, listaSeleccionada) {
+//     // Puedes implementar la lógica para asociar el video con la lista seleccionada
+//     // Por ahora, simplemente lograré la asociación en la consola
+//     console.log(`El video '${videoFile.name}' se ha asociado con la lista '${listaSeleccionada}'.`);
+// }
         
     </script>
 <script>
@@ -558,12 +621,16 @@ function crearlista(event) {
 
 // Función para agregar una lista al carrusel
 function agregarListaAlCarousel(nombreDirectorio) {
-    // Crea un nuevo elemento <a> con el nombre de la lista
-    var nuevoEnlace = document.createElement("a");
-    nuevoEnlace.textContent = nombreDirectorio;
+    // Crea un nuevo elemento <div> para la nueva lista y agrega el nombre
+    var nuevaLista = document.createElement("div");
+    nuevaLista.textContent = nombreDirectorio;
+    
+    // Asigna un id único basado en el nombre de la lista
+    var idLista = nombreDirectorio.replace(/\s+/g, '-').toLowerCase();
+    nuevaLista.id = idLista;
 
-    // Agrega la nueva lista al contenedor del carrusel
-    document.querySelector('.lista').appendChild(nuevoEnlace);
+    // Agrega la nueva lista al contenedor del carousel
+    document.getElementById('carousel').appendChild(nuevaLista);
 }
 
 function agregarDirectorioLocalStorage(nombreDirectorio) {
@@ -646,7 +713,6 @@ function cambiarALista(nombreDirectorio) {
     // Actualiza el nombre en el div.lista
     document.querySelector('.lista').textContent = nombreDirectorio;
 
-    // Puedes agregar lógica adicional aquí, como cargar videos específicos para esa lista, etc.
 }
 
 
@@ -657,8 +723,6 @@ function actualizarInterfaz() {
     // Recupera la lista de directorios del localStorage
     var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
 
-    // Limpia el contenedor antes de volver a crear los elementos
-    contenedor.innerHTML = "";
 
     // Crea enlaces para cada directorio en la lista y agrégales al contenedor
     listaDirectorios.forEach(function (nombreDirectorio) {
@@ -734,7 +798,7 @@ window.onload = function () {
 							<input type="file" id="inputVideo" accept="video/*"
 								style="display: none;"> <a class="dropdown-item"
 								href="#"
-								onclick="document.getElementById('inputVideo').click();"> <span
+								onclick="importarVideo(event)"><span
 								id="videolabel">Importar video</span></a>
 						</div></li>
 					<li class="nav-item dropdown"><a
