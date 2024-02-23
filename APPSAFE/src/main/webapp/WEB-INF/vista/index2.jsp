@@ -359,90 +359,98 @@ function importarVideo(event) {
 
             // Mostrar el nombre y la extensión del archivo
             console.log('Archivo seleccionado: ' + fileName + ' (Extensión: ' + fileExtension);
+
+            // Verificar si ya existe un video con el mismo nombre de la lista
+            var listaActual = document.querySelector('.videos-container');
+            var videoExistente = listaActual.querySelector('video.' + nombreListaActual);
+
+            var listaDeVideos = JSON.parse(localStorage.getItem('listaDeVideos')) || [];
+
+            // Verificar si ya existe una entrada en listaDeVideos con el mismo nombre de video y la misma lista
+            var videoEnListaDeVideos = listaDeVideos.find(function (video) {
+                return video.nombreLista === nombreListaActual && video.nombreVideo === fileName;
+            });
+
+            if (!videoExistente || (videoExistente && videoExistente.classList.contains(nombreListaActual) && !videoEnListaDeVideos)) {
+                // Array para almacenar los videos de la lista actual
+
+                // Función para verificar si el archivo de video es de un tipo permitido
+                function esTipoDeVideoPermitido(nombreArchivo) {
+                    // Lista de extensiones permitidas
+                    const extensionesPermitidas = ['mp3', 'mp4', 'wmv', 'hevc', 'avi', 'mov', 'f4v', 'mkv', 'ts', '3gp', 'mprg-2', 'webm', 'gif'];
+
+                    // Obtén la extensión del archivo si el nombreArchivo está definido
+                    const extension = nombreArchivo ? nombreArchivo.split('.').pop().toLowerCase() : '';
+
+                    // Verifica si la extensión está en la lista de extensiones permitidas
+                    return extensionesPermitidas.includes(extension);
+                }
+
+                // Verifica si el archivo es de un tipo permitido
+                if (esTipoDeVideoPermitido(fileExtension)) {
+                    // Crear un objeto Blob para el archivo seleccionado
+                    var fileBlob = new Blob([inputVideo.files[0]], { type: inputVideo.files[0].type });
+
+                    // Crea un nuevo elemento de video
+                    var nuevoVideo = document.createElement('video');
+                    nuevoVideo.controls = true;
+
+                    // Crea una fuente para el archivo de video
+                    var fuenteVideo = document.createElement('source');
+                    fuenteVideo.src = URL.createObjectURL(fileBlob);
+                    fuenteVideo.type = inputVideo.files[0].type;
+
+                    // Agrega la fuente al video
+                    nuevoVideo.appendChild(fuenteVideo);
+
+                    // Agrega el video al contenedor del carrusel específico
+                    // Añade una clase al nuevo video con el mismo nombre que la lista
+                    var idListaActual = nombreListaActual;
+                    nuevoVideo.classList.add(idListaActual);
+                    listaActual.appendChild(nuevoVideo);
+
+                    // Agrega el nuevo directorio a la lista
+                    listaDeVideos.push({
+                        nombreLista: nombreListaActual,
+                        nombreVideo: fileName,
+                        Extension: fileExtension
+                        // Agrega más información si es necesario
+                    });
+
+                    // Guarda la lista actualizada en localStorage
+                    localStorage.setItem('listaDeVideos', JSON.stringify(listaDeVideos));
+
+                    console.log('Video agregado con éxito.');
+
+                    // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
+                    inputVideo.value = '';
+                    inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
+                } else {
+                    console.log('El formato del video no es válido. Selecciona un archivo de video permitido.');
+                    // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
+                    inputVideo.value = '';
+                    inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
+                }
+            } else {
+                console.log('Ya existe un video con el mismo nombre para la lista actual.');
+                // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
+                inputVideo.value = '';
+                inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
+            }
         } else {
             // No se seleccionó ningún archivo
             console.log('Ningún archivo seleccionado');
-        }
-
-        // Verificar si ya existe un video con el mismo nombre de la lista
-        var listaActual = document.querySelector('.videos-container');
-        var videoExistente = listaActual.querySelector('video.' + nombreListaActual);
-
-        var listaDeVideos = JSON.parse(localStorage.getItem('listaDeVideos')) || [];
-
-        // Verificar si ya existe una entrada en listaDeVideos con el mismo nombre de video y la misma lista
-        var videoEnListaDeVideos = listaDeVideos.find(function (video) {
-            return video.nombreLista === nombreListaActual && video.nombreVideo === fileName;
-        });
-
-        if (!videoExistente && !videoEnListaDeVideos) {
-            // Array para almacenar los videos de la lista actual
-
-            // Función para verificar si el archivo de video es de un tipo permitido
-            function esTipoDeVideoPermitido(nombreArchivo) {
-                // Lista de extensiones permitidas
-                const extensionesPermitidas = ['mp3', 'mp4', 'wmv', 'hevc', 'avi', 'mov', 'f4v', 'mkv', 'ts', '3gp', 'mprg-2', 'webm', 'gif'];
-
-                // Obtén la extensión del archivo si el nombreArchivo está definido
-                const extension = nombreArchivo ? nombreArchivo.split('.').pop().toLowerCase() : '';
-
-                // Verifica si la extensión está en la lista de extensiones permitidas
-                return extensionesPermitidas.includes(extension);
-            }
-
-            // Verifica si el archivo es de un tipo permitido
-            if (esTipoDeVideoPermitido(fileExtension)) {
-                // Crear un objeto Blob para el archivo seleccionado
-                var fileBlob = new Blob([inputVideo.files[0]], { type: inputVideo.files[0].type });
-
-                // Crea un nuevo elemento de video
-                var nuevoVideo = document.createElement('video');
-                nuevoVideo.controls = true;
-
-                // Crea una fuente para el archivo de video
-                var fuenteVideo = document.createElement('source');
-                fuenteVideo.src = URL.createObjectURL(fileBlob);
-                fuenteVideo.type = inputVideo.files[0].type;
-
-                // Agrega la fuente al video
-                nuevoVideo.appendChild(fuenteVideo);
-
-                // Agrega el video al contenedor del carrusel específico
-                // Añade una clase al nuevo video con el mismo nombre que la lista
-                var idListaActual = nombreListaActual;
-                nuevoVideo.classList.add(idListaActual);
-                listaActual.appendChild(nuevoVideo);
-
-                // Agrega el nuevo directorio a la lista
-                listaDeVideos.push({
-                    nombreLista: nombreListaActual,
-                    nombreVideo: fileName,
-                    Extension: fileExtension
-                    // Agrega más información si es necesario
-                });
-
-                // Guarda la lista actualizada en localStorage
-                localStorage.setItem('listaDeVideos', JSON.stringify(listaDeVideos));
-
-                console.log('Video agregado con éxito.');
-
-                // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
-                inputVideo.value = '';
-                inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
-            } else {
-                console.log('El formato del video no es válido. Selecciona un archivo de video permitido.');
-                // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
-                inputVideo.value = '';
-                inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
-            }
-        } else {
-            console.log('Ya existe un video con el mismo nombre para la lista actual.');
             // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
             inputVideo.value = '';
             inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
         }
+
+  
     } else {
         console.log('No has seleccionado ninguna lista de reproducción');
+        // Restablecer el valor de inputVideo para simular que no se ha seleccionado ningún archivo
+        inputVideo.value = '';
+        inputVideo.files = null; // O puedes usar: inputVideo.files = new FileList();
     }
 
     // Vuelve a inicializar el carrusel después de agregar los nuevos videos
