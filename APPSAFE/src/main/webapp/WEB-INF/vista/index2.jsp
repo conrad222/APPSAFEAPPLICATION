@@ -334,13 +334,38 @@ $('.dropdown-item').click(function() {
 
 <script>
 
-// function abrirSelectorDeArchivos() {
-//     document.getElementById('inputVideo').click();
-// }
+//Función para manejar la lógica después de seleccionar archivos
+function abrirSelectorDeArchivos() {
+    return new Promise(function (resolve) {
+        var inputVideo = document.getElementById('inputVideo');
 
+        // Event listener para el cambio en el input de archivos
+        function handleFileSelection() {
+            if (inputVideo.files.length > 0) {
+                resolve();
+            } else {
+                console.log('Ningun archivo seleccionado');
+            }
+
+            // Eliminar el escuchador después de manejar el evento
+            inputVideo.removeEventListener('change', handleFileSelection);
+        }
+
+        inputVideo.addEventListener('change', handleFileSelection);
+        inputVideo.click();
+    });
+}
+
+async function importarYProcesarVideo(event) {
+    // Abrir selector de archivos y esperar a que se seleccione un archivo
+    await abrirSelectorDeArchivos();
+
+    // Luego, continuar con la importación del video
+    importarVideo(event);
+}
 
 function importarVideo(event) {
-    document.getElementById('inputVideo').click();
+//     document.getElementById('inputVideo').click();
     
 
     // Obtener el elemento de entrada de archivos
@@ -547,7 +572,8 @@ function importarVideo(event) {
 // 	        console.log('Language Messages:', LanguageManager.messages);
 
 	        if (idioma === 'es') {
-
+		        // Aquí puedes hacer lo que necesites con el idioma seleccionado
+		        console.log('Idioma seleccionado:', idioma);
 	        	document.getElementById('idiomalabel').textContent = LanguageManager.getMessage('IDIOMA');
 	            document.getElementById('menulabel').textContent = LanguageManager.getMessage('MENU');
 	            document.getElementById('resolucionlabel').textContent = LanguageManager.getMessage('RESOLUCION');
@@ -567,6 +593,8 @@ function importarVideo(event) {
 	            inputElement.placeholder = LanguageManager.getMessage('CREAR LISTA');
 	            
 	        } else if (idioma === 'en') {
+		        // Aquí puedes hacer lo que necesites con el idioma seleccionado
+		        console.log('Idioma seleccionado:', idioma);
 	            document.getElementById('idiomalabel').textContent = LanguageManager.getMessage('LANGUAGE');
 	            document.getElementById('menulabel').textContent = LanguageManager.getMessage('MENU');
 	            document.getElementById('resolucionlabel').textContent = LanguageManager.getMessage('RESOLUTION');
@@ -647,44 +675,83 @@ function importarVideo(event) {
     </script>
 <script>
 function crearlista(event) {
+    // Obtener el elemento de entrada de archivos
+    var inputVideo = document.getElementById('crearlistalabel');
+
+    // Obtener el nombre de la lista actual
+    var nuevoNombreDirectorio = document.getElementById("crearlistalabel").value.trim();
+
+    var listaDirectorios = JSON.parse(localStorage.getItem('listaDirectorios')) || [];
+
     if (event.key === "Enter") {
-        var nuevoNombreDirectorio = document.getElementById("crearlistalabel").value.trim();
-
         if (nuevoNombreDirectorio !== "") {
-            // Crea un nuevo elemento <a> para mostrar el nombre del directorio en el botón
-            var nuevoEnlace = document.createElement("a");
-            nuevoEnlace.href = "#";
-            nuevoEnlace.textContent = nuevoNombreDirectorio;
-            nuevoEnlace.className = "dropdown-item";
+            // Verificar si nombreListaActual no es null o una cadena vacía
+            if (!listaDirectorios.includes(nuevoNombreDirectorio)) {
 
-            // Agrega el nuevo enlace al contenedor del dropdown-menu
-            document.querySelector('.dropdown-menu6').insertBefore(nuevoEnlace, document.getElementById('raya'));
+                if (nuevoNombreDirectorio !== "") {
+                    // Crea un nuevo elemento <a> para mostrar el nombre del directorio en el botón
+                    var nuevoEnlace = document.createElement("a");
+                    nuevoEnlace.href = "#";
+                    nuevoEnlace.textContent = nuevoNombreDirectorio;
+                    nuevoEnlace.className = "dropdown-item";
 
-            // Agrega el nuevo directorio a la lista en localStorage
-            agregarDirectorioLocalStorage(nuevoNombreDirectorio);
+                    // Encuentra el último elemento en el contenedor
+                    var ultimoElemento = document.querySelector('.dropdown-menu6').lastElementChild;
 
-            // Agrega el nuevo directorio al carrusel
-            agregarListaAlCarousel(nuevoNombreDirectorio);
+                    // Agrega el nuevo enlace después del último elemento
+                    if (ultimoElemento) {
+                        ultimoElemento.parentNode.insertBefore(nuevoEnlace, ultimoElemento.nextSibling);
+                    } else {
+                        // Si no hay elementos existentes, simplemente añádelo al final
+                        document.querySelector('.dropdown-menu6').appendChild(nuevoEnlace);
+                    }
 
-            // Limpia el valor del input después de crear el directorio
-            document.getElementById("crearlistalabel").value = "";
+                    // Agrega el nuevo directorio a la lista en localStorage
+                    agregarDirectorioLocalStorage(nuevoNombreDirectorio);
+
+                    // Agrega el nuevo directorio al carrusel
+                    agregarListaAlCarousel(nuevoNombreDirectorio);
+
+                    // Limpia el valor del input después de crear el directorio
+                    document.getElementById("crearlistalabel").value = "";
+                }
+
+            } else {
+                console.log('Ya existe un directorio con ese mismo nombre.');
+            }
+
+        } else {
+            console.log('No has escrito nada');
         }
     }
 }
 
+
 // Función para agregar una lista al carrusel
 function agregarListaAlCarousel(nombreDirectorio) {
-    // Crea un nuevo elemento <div> para la nueva lista y agrega el nombre
-    var nuevaLista = document.createElement("div");
-    nuevaLista.textContent = nombreDirectorio;
-    
-    // Asigna un id único basado en el nombre de la lista
-    var idLista = nombreDirectorio.replace(/\s+/g, '-').toLowerCase();
-    nuevaLista.id = idLista;
+    // Actualiza el contenido del elemento con la clase "lista"
+    var listaElement = document.querySelector('.lista');
+    listaElement.textContent = nombreDirectorio;
 
-    // Agrega la nueva lista al contenedor del carousel
-    document.getElementById('carousel').appendChild(nuevaLista);
+    // Agrega la clase correspondiente al elemento con la clase "lista"
+    listaElement.classList.add(nombreDirectorio);
 }
+
+// function agregarListaAlCarousel(nombreDirectorio) {
+//     // Crea un nuevo elemento <div> para la nueva lista y agrega el nombre
+//     var nuevaLista = document.createElement("div");
+//     nuevaLista.textContent = nombreDirectorio;
+    
+//     // Asigna un id único basado en el nombre de la lista
+//     var idLista = nombreDirectorio.replace(/\s+/g, '-').toLowerCase();
+//     nuevaLista.id = idLista;
+
+//     // Agrega la nueva lista al contenedor del carousel
+//     document.getElementById('carousel').appendChild(nuevaLista);
+// }
+
+
+
 
 function agregarDirectorioLocalStorage(nombreDirectorio) {
     // Obtén la lista actual de directorios desde localStorage o crea una nueva lista vacía
@@ -867,25 +934,10 @@ window.onload = function () {
 							aria-labelledby="navbarDropdown2">
 							<input type="file" id="inputVideo" accept="video/*"
 								style="display: none;"> <a class="dropdown-item"
-								href="#" onclick="importarVideo(event)"><span
-								id="videolabel">Importar video</span></a>
+								href="#" onclick="importarYProcesarVideo(event)"> <span
+								id="videolabel">Importar y procesar video</span>
+							</a>
 						</div></li>
-					<!-- 					<li class="nav-item dropdown"><a -->
-					<!-- 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" -->
-					<!-- 						role="button" data-toggle="dropdown" aria-haspopup="true" -->
-					<!-- 						aria-expanded="false"> <span id="menulabel">MENU</span> -->
-					<!-- 					</a> -->
-					<!-- 						<div class="dropdown-menu dropdown-menu2" -->
-					<!-- 							aria-labelledby="navbarDropdown2"> -->
-					<!-- 							<input type="file" id="inputVideo" accept="video/*" -->
-					<!-- 								style="display: none;"> <a class="dropdown-item" -->
-					<!-- 								href="#" onclick="abrirSelectorDeArchivos()"> <span -->
-					<!-- 								id="videolabel">Importar video</span> -->
-					<!-- 							</a> <a class="dropdown-item" href="#" -->
-					<!-- 								onclick="importarVideo(event)"> <span -->
-					<!-- 								id="videolabel">Procesar archivo seleccionado</span> -->
-					<!-- 							</a> -->
-					<!-- 						</div></li> -->
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown3"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -991,15 +1043,15 @@ window.onload = function () {
 							aria-labelledby="navbarDropdown5">
 							<a class="dropdown-item" href="#"
 								onclick="seleccionarCalidad(this, 'ALTA')"><span
-								id="altalabel">ALTA</span><i class="fas fa-check"></i></a>
+								id="altalabel"> ALTA </span><i class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
 								onclick="seleccionarCalidad(this, 'MEDIA')"><span
-								id="medialabel">MEDIA</span><i class="fas fa-check"></i></a>
+								id="medialabel"> MEDIA </span><i class="fas fa-check"></i></a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#"
 								onclick="seleccionarCalidad(this, 'BAJA')"><span
-								id="bajalabel">BAJA</span><i class="fas fa-check"></i></a>
+								id="bajalabel"> BAJA </span><i class="fas fa-check"></i></a>
 						</div></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown6"
